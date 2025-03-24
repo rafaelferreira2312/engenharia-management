@@ -1,0 +1,47 @@
+<ng-container *ngIf="project$ | async as project; else loading">
+    <div class="project-detail-container">
+      <div class="project-header">
+        <h1>{{ project.name }}</h1>
+        <button mat-icon-button [routerLink]="['/projects']">
+          <mat-icon>arrow_back</mat-icon>
+        </button>
+      </div>
+      
+      <mat-divider></mat-divider>
+      
+      <div class="project-content">
+        <div class="project-info">
+          <h3>Descrição</h3>
+          <p>{{ project.description }}</p>
+          
+          <h3>Especificações Técnicas</h3>
+          <ul>
+            <li *ngFor="let spec of project.technical_specifications">
+              {{ spec }}
+            </li>
+          </ul>
+        </div>
+        
+        <div class="project-meta">
+          <mat-card>
+            <mat-card-header>
+              <mat-card-title>Detalhes</mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+              <p><strong>Status:</strong> {{ project.status | statusLabel }}</p>
+              <p><strong>Início:</strong> {{ project.start_date | date }}</p>
+              <p><strong>Término:</strong> {{ project.end_date | date }}</p>
+              <p><strong>Engenheiro:</strong> {{ project.engineer.name }}</p>
+              <p><strong>Cliente:</strong> {{ project.client.name }}</p>
+            </mat-card-content>
+          </mat-card>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+  
+  <ng-template #loading>
+    <div class="loading-spinner">
+      <mat-spinner diameter="50"></mat-spinner>
+    </div>
+  </ng-template>

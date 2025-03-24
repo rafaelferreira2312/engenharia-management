@@ -1,0 +1,107 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: .  # Alterado de ./backend para .
+      dockerfile: backend/docker/Dockerfile  # Caminho relativo corrigido
+    container_name: engineering_backend
+    restart: unless-stopped
+    volumes:
+      - ./backend:/var/www
+    environment:
+      - DB_CONNECTION=mysql
+      - DB_HOST=mariadb
+      - DB_PORT=3306
+      - DB_DATABASE=engineering_db
+      - DB_USERNAME=root
+      - DB_PASSWORD=
+      - MONGO_HOST=mongodb
+      - MONGO_PORT=27017
+      - MONGO_DATABASE=engineering_docs
+      - REDIS_HOST=redis
+      - APP_ENV=local
+      - APP_KEY=
+      - APP_DEBUG=true
+    ports:
+      - "8000:8001"
+    depends_on:
+      - mariadb
+      - mongodb
+      - redis
+    networks:
+      - engineering_network
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: engineering_frontend
+    restart: unless-stopped
+    ports:
+      - "4200:80"
+    depends_on:
+      - backend
+    networks:
+      - engineering_network
+
+  mariadb:
+    image: mariadb:10.8
+    container_name: engineering_mariadb
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ''
+      MYSQL_DATABASE: engineering_db
+    volumes:
+      - mariadb_data:/var/lib/mysql
+    ports:
+      - "3306:3307"
+    networks:
+      - engineering_network
+
+  mongodb:
+    image: mongo:5.0
+    container_name: engineering_mongodb
+    restart: unless-stopped
+    environment:
+      MONGO_INITDB_DATABASE: engineering_docs
+    volumes:
+      - mongodb_data:/data/db
+    ports:
+      - "27017:27017"
+    networks:
+      - engineering_network
+
+  redis:
+    image: redis:6.2
+    container_name: engineering_redis
+    restart: unless-stopped
+    volumes:
+      - redis_data:/data
+    ports:
+      - "6379:6379"
+    networks:
+      - engineering_network
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: engineering_phpmyadmin
+    restart: unless-stopped
+    environment:
+      PMA_HOST: mariadb
+      PMA_PORT: 3306
+    ports:
+      - "8080:80"
+    depends_on:
+      - mariadb
+    networks:
+      - engineering_network
+
+volumes:
+  mariadb_data:
+  mongodb_data:
+  redis_data:
+
+networks:
+  engineering_network:
+    driver: bridge

@@ -1,0 +1,33 @@
+# Backend (Laravel)
+backend/vendor/
+backend/.env
+backend/storage/logs/
+backend/storage/framework/cache/
+backend/storage/framework/sessions/
+backend/storage/framework/views/
+backend/bootstrap/cache/
+backend/composer.lock
+backend/.phpunit.result.cache
+
+# Frontend (Angular)
+frontend/node_modules/
+frontend/dist/
+frontend/.angular/
+frontend/.cache/
+frontend/.vscode/
+frontend/coverage/
+frontend/.env
+frontend/package-lock.json
+
+# IDE
+.idea/
+.vscode/
+*.swp
+
+# Docker
+.env
+docker-compose.override.yml
+
+# Sistema
+.DS_Store
+Thumbs.db
